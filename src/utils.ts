@@ -1,33 +1,19 @@
-export enum UserRole {
-    STUDENT = 'student',
-    TEACHER = 'teacher',
-    GUARDIAN = 'guardian',
-    ADMIN = 'admin'
+import { CreateGuardianDto } from "./auth/dtos/create-guardian.dto";
+import { CreateStudentDto } from "./auth/dtos/create-student";
+import { CreateTeacherDto } from "./auth/dtos/create-teacher.dto";
+import { LoginStudentDto, LoginGuardianDto, LoginTeacherDto } from "./auth/dtos/login-user.dto";
+import { UserRole } from "./enums";
+
+
+export const roleToLoginDtoMap = {
+    [UserRole.STUDENT]: LoginStudentDto,
+    [UserRole.GUARDIAN]: LoginGuardianDto,
+    [UserRole.TEACHER]: LoginTeacherDto
 }
 
-export enum MaritalStatus {
-    SINGLE = 'single',
-    MARRIED = 'married',
-    WIDOWED = 'widowed',
-    DIVORCED = 'divorced',
-    OTHER = 'other'
+export const roleToCreateDtoMap = {
+    [UserRole.STUDENT]: CreateStudentDto,
+    [UserRole.GUARDIAN]: CreateGuardianDto,
+    [UserRole.TEACHER]: CreateTeacherDto
 }
 
-export enum BloodGroup {
-    A_POSTITIVE = 'A+',
-    A_NEGATIVE = 'A-',
-    B_POSITIVE = 'B+',
-    B_NEGATIVE = 'B-',
-    AB_POSITIVE = 'AB+',
-    AB_NEGATIVE = 'AB-',
-    O_POSITIVE = 'O+',
-    O_NEGATIVE = 'O-',
-}
-
-export enum StudentEnrollmentStatus {
-    ENROLLED = 'enrolled',
-    SUSPENDED = 'suspended',
-    EXPELLED = 'expelled',
-    GRADUATED = 'graduated',
-    UNKNOWN = 'unknown'
-}

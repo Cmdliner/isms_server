@@ -13,5 +13,6 @@ A comprehensive school management RESTful API server written in Typescript and N
 ## TODOS
 
 ## BUGS
+- Circular dependency with enum import
 
 ## REMINDERS
