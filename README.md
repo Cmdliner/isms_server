@@ -8,7 +8,7 @@ A comprehensive school management RESTful API server written in Typescript and N
 
 - Setup the env variables by writing them to a `.env` file
 
-- Run `pnpm start:dev` to start the server locally
+- Run `pnpm run start:dev` to start the server locally
 
 
 ## IMPLEMENTED FEATURES
