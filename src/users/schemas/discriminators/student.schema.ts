@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Schema as MongooseSchema, Document, Types } from "mongoose";
-import { BloodGroup, StudentEnrollmentStatus, UserRole } from "src/lib/enums";
+import { BloodGroup, StudentEnrollmentStatus } from "../../../lib/enums";
 import { User } from "../user.schema";
 
 export type StudentDocument = Student & Document;
@@ -23,7 +23,7 @@ export class Student extends User {
     //! hint => Suggest moving to its own model and ref here
     @Prop({
         type: {
-            blood_group: { type: String, /*enum:  Object.values(BloodGroup) */ },
+            blood_group: { type: String, enum:  Object.values(BloodGroup) },
             allergies: { type: [String], default: [] }
         }
     })

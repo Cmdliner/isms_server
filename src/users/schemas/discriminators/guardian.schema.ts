@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Schema as MongooseSchema, Document, Types } from "mongoose";
-import { MaritalStatus, UserRole } from "src/lib/enums";
+import { MaritalStatus } from "../../../lib/enums";
 import { User } from "../user.schema";
 
 export type GuardianDocument = Guardian & Document;

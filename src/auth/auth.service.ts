@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Guardian } from 'src/users/schemas/discriminators/guardian.schema';
-import { Student } from 'src/users/schemas/discriminators/student.schema';
-import { Teacher } from 'src/users/schemas/discriminators/teacher.schema';
-import { User } from 'src/users/schemas/user.schema';
-import { UserRole } from 'src/lib/enums';
+import { Guardian } from '../users/schemas/discriminators/guardian.schema';
+import { Student } from '../users/schemas/discriminators/student.schema';
+import { Teacher } from '../users/schemas/discriminators/teacher.schema';
+import { User } from '../users/schemas/user.schema';
+import { UserRole } from '../lib/enums';
 import { CreateStudentDto } from './dtos/create-student';
 import { CreateGuardianDto } from './dtos/create-guardian.dto';
 import { CreateTeacherDto } from './dtos/create-teacher.dto';

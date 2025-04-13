@@ -1,5 +1,5 @@
-import { ArrayNotEmpty, IsAlpha, IsArray, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsString, IsStrongPassword, Matches } from "class-validator";
-import { UserRole } from "src/lib/enums";
+import { IsAlpha, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsString, IsStrongPassword } from "class-validator";
+import { UserRole } from "../../lib/enums";
 
 export class CreateUserDto {
 

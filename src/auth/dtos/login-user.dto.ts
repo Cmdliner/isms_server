@@ -1,5 +1,5 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsString, Matches } from "class-validator";
-import { UserRole } from "src/lib/enums";
+import { UserRole } from "../../lib/enums";
 
 export class LoginUserDto {
 
