@@ -1,8 +1,15 @@
-import { IsEnum, IsNotEmpty, IsObject, IsString } from "class-validator";
+import { ArrayUnique, IsArray, IsEnum, IsMongoId, IsNotEmpty, IsObject, IsOptional, IsString } from "class-validator";
 import { CreateUserDto } from "./create-user.dto";
 import { MaritalStatus } from "src/lib/enums";
+import { Types } from "mongoose";
 
 export class CreateGuardianDto extends CreateUserDto {
+
+    @IsArray()
+    @ArrayUnique()
+    // ! todo => Items in the array should be mongo id
+    @IsOptional()
+    wards: Types.ObjectId[];
 
     @IsString()
     @IsNotEmpty()

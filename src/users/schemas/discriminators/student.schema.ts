@@ -15,7 +15,7 @@ export class Student extends User {
     // current_class: Types.ObjectId;
 
     @Prop({ index: true, type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Guardian' }] })
-    guardians: Types.ObjectId[];
+    guardians?: Types.ObjectId[];
 
     @Prop({ required: true })
     date_of_birth: Date;

@@ -14,7 +14,7 @@ export class Guardian extends User {
     @Prop({ required: true })
     occupation: string;
 
-    @Prop({enum: Object.values(MaritalStatus) })
+    @Prop({ enum: Object.values(MaritalStatus) })
     marital_status: string;
 
     @Prop({
