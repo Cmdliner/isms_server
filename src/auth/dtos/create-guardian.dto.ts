@@ -18,12 +18,6 @@ export class CreateGuardianDto extends CreateUserDto {
     @IsEnum(MaritalStatus)
     marital_status: MaritalStatus;
 
-    @IsObject()
-    address: {
-        street: string;
-        city: string;
-        state: string;
-        country: string;
-        postal_code: string;
-    }
+    @IsString()
+    home_address: string;
 }

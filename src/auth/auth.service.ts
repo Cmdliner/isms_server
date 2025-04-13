@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Guardian, GuardianDocument } from 'src/users/schemas/discriminators/guardian.schema';
-import { Student, StudentDocument } from 'src/users/schemas/discriminators/student.schema';
-import { Teacher, TeacherDocument } from 'src/users/schemas/discriminators/teacher.schema';
+import { Guardian } from 'src/users/schemas/discriminators/guardian.schema';
+import { Student } from 'src/users/schemas/discriminators/student.schema';
+import { Teacher } from 'src/users/schemas/discriminators/teacher.schema';
 import { User } from 'src/users/schemas/user.schema';
 import { UserRole } from 'src/lib/enums';
 import { CreateStudentDto } from './dtos/create-student';
@@ -12,6 +12,7 @@ import { CreateTeacherDto } from './dtos/create-teacher.dto';
 import { LoginStudentDto, LoginTeacherDto, LoginGuardianDto, LoginUserDto } from './dtos/login-user.dto';
 import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,8 @@ export class AuthService {
         @InjectModel(Student.name) private studentModel: Model<Student>,
         @InjectModel(Guardian.name) private guardianModel: Model<Guardian>,
         @InjectModel(Teacher.name) private teacherModel: Model<Teacher>,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private configService: ConfigService
     ) { }
 
     async createUser(createUserDto: CreateStudentDto | CreateTeacherDto | CreateGuardianDto) {
@@ -31,28 +33,50 @@ export class AuthService {
 
         switch (createUserDto.role) {
             case UserRole.STUDENT:
-                const result = await this.createStudent(createUserDto as CreateStudentDto);
-                return result;
+                return await this.createStudent(createUserDto as CreateStudentDto);
             case UserRole.GUARDIAN:
-                return this.createGuardian(createUserDto as CreateGuardianDto);
+                return await this.createGuardian(createUserDto as CreateGuardianDto);
             case UserRole.TEACHER:
-                return this.createTeacher(createUserDto as CreateTeacherDto);
+                return await this.createTeacher(createUserDto as CreateTeacherDto);
             default:
                 throw new BadRequestException('Unknown role. Could not create user');
         }
     }
 
-    private async createStudent(createStudentData: CreateStudentDto): Promise<StudentDocument> {
-        const result = await this.studentModel.create(createStudentData);
-        return result;
+    private async createStudent(createStudentData: CreateStudentDto) {
+        try {
+            const student = await this.studentModel.create(createStudentData);
+            return student;
+        } catch (error) {
+            await this.handleUniqueError(error);
+        }
     }
 
-    private async createGuardian(createGuardianData: CreateGuardianDto): Promise<GuardianDocument> {
-        return this.guardianModel.create(createGuardianData);
+    private async createGuardian(createGuardianData: CreateGuardianDto) {
+        try {
+            const guardian = await this.guardianModel.create(createGuardianData);
+            return guardian;
+        } catch (error) {
+            await this.handleUniqueError(error);
+        }
     }
 
-    private async createTeacher(createTeacherData: CreateTeacherDto): Promise<TeacherDocument> {
-        return this.teacherModel.create(createTeacherData);
+    private async createTeacher(createTeacherData: CreateTeacherDto) {
+        try {
+            const teacher = await this.teacherModel.create(createTeacherData);
+            return teacher;
+        } catch (error) {
+            await this.handleUniqueError(error);
+        }
+    }
+
+    private async handleUniqueError(error: any): Promise<void> {
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyValue)[0];
+            const value = error.keyValue[field];
+            throw new BadRequestException(`The ${field} '${value}' is already taken.`);
+        }
+        throw new BadRequestException(error.message);
     }
 
     async login(loginUserDto: LoginStudentDto | LoginTeacherDto | LoginGuardianDto) {
@@ -69,6 +93,13 @@ export class AuthService {
         }
     }
 
+    private async generateJwtToken(payload: any, expiresIn: string): Promise<string> {
+        return this.jwtService.signAsync(payload, {
+            secret: this.configService.get('JWT_SECRET'),
+            expiresIn,
+        });
+    }
+
     private async loginStudent(loginStudentData: LoginStudentDto) {
         const { admission_no, password } = loginStudentData;
 
@@ -79,7 +110,7 @@ export class AuthService {
         if (!passwordsMatch) throw new ForbiddenException('Invalid admission number or password');
 
         const payload = { sub: student.id, role: student.role };
-        return { access_token: this.jwtService.signAsync(payload, { expiresIn: '7d' }) }
+        return { access_token: await this.generateJwtToken(payload, '7d') };
     }
 
     private async loginTeacher(loginTeacherData: LoginTeacherDto) {
@@ -92,8 +123,7 @@ export class AuthService {
         if (!passwordsMatch) throw new ForbiddenException('Invalid staff id or password');
 
         const payload = { sub: teacher._id, role: teacher.role };
-        return { access_token: this.jwtService.signAsync(payload, { expiresIn: '1d' }) }
-
+        return { access_token: await this.generateJwtToken(payload, '1d') };
     }
 
     private async loginGuardian(loginGuardianData: LoginGuardianDto) {
@@ -106,8 +136,6 @@ export class AuthService {
         if (!passwordsMatch) throw new ForbiddenException('Invalid email or password');
 
         const payload = { sub: guardian._id, role: guardian.role };
-        return { access_token: this.jwtService.signAsync(payload, { expiresIn: '2h' }) }
+        return { access_token: await this.generateJwtToken(payload, '2h') };
     }
-
-
 }

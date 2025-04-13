@@ -16,6 +16,7 @@ A comprehensive school management RESTful API server written in Typescript and N
 
 ## TODOS
 - Write Tests
+- Auto generate staff id and student admission no on create
 - Find a way to perform mongo sanitization and prevent csrf attacks in refresh when using cookies
 
 ## BUGS

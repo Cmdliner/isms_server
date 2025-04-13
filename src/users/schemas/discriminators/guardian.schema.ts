@@ -17,22 +17,8 @@ export class Guardian extends User {
     @Prop({ enum: Object.values(MaritalStatus) })
     marital_status: string;
 
-    @Prop({
-        type: {
-            street: String,
-            city: String,
-            state: String,
-            country: { type: String, default: 'Nigeria' },
-            postal_code: String
-        }
-    })
-    address: {
-        street: string;
-        city: string;
-        state: string;
-        country: string;
-        postal_code: string;
-    }
+    @Prop({ required: true})
+    home_address: string;
 }
 
 export const GuardianSchema = SchemaFactory.createForClass(Guardian);

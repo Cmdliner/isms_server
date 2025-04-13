@@ -17,12 +17,14 @@ export class AuthController {
 
     @Post('register')
     async register(@Body(new RoleValidationPipe(roleToCreateDtoMap)) createUserDto: CreateStudentDto | CreateGuardianDto | CreateTeacherDto) {
-        await this.authService.createUser(createUserDto);
+        const result = await this.authService.createUser(createUserDto);
+        return { success: true, user: result };
     }
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
     async login(@Body(new RoleValidationPipe(roleToLoginDtoMap)) loginUserDto: LoginStudentDto | LoginTeacherDto | LoginGuardianDto) {
-        await this.authService.login(loginUserDto);
+        const result = await this.authService.login(loginUserDto);
+        return { success: true, tokens: result };
     }
 }
