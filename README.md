@@ -10,9 +10,14 @@ A comprehensive school management RESTful API server written in Typescript and N
 
 - Run `pnpm start:dev` to start the server locally
 
+
+## IMPLEMENTED FEATURES
+- Authentication for all current user roles (`student`, `teacher`, `guardian`) using jwt
+
 ## TODOS
+- Write Tests
+- Find a way to perform mongo sanitization and prevent csrf attacks in refresh when using cookies
 
 ## BUGS
-- Circular dependency with enum import
 
 ## REMINDERS

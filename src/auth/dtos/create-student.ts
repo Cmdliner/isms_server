@@ -1,14 +1,6 @@
 import { IsDateString, IsEnum, Matches } from "class-validator";
 import { CreateUserDto } from "./create-user.dto";
-import { StudentEnrollmentStatus } from "src/enums";
-
-// enum StudentEnrollmentStatus {
-//     ENROLLED = 'enrolled',
-//     SUSPENDED = 'suspended',
-//     EXPELLED = 'expelled',
-//     GRADUATED = 'graduated',
-//     UNKNOWN = 'unknown'
-// }
+import { StudentEnrollmentStatus } from "src/lib/enums";
 
 export class CreateStudentDto extends CreateUserDto {
 

@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty, IsObject, IsString } from "class-validator";
 import { CreateUserDto } from "./create-user.dto";
-import { MaritalStatus } from "src/utils";
+import { MaritalStatus } from "src/lib/enums";
 
 export class CreateGuardianDto extends CreateUserDto {
 
@@ -8,8 +8,8 @@ export class CreateGuardianDto extends CreateUserDto {
     @IsNotEmpty()
     occupation: string;
 
-    // @IsEnum(Object.values(MaritalStatus))
-    marital_status: string;
+    @IsEnum(MaritalStatus)
+    marital_status: MaritalStatus;
 
     @IsObject()
     address: {

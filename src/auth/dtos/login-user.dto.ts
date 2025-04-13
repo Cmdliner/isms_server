@@ -1,10 +1,10 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsString, Matches } from "class-validator";
-import { UserRole } from "src/utils";
+import { UserRole } from "src/lib/enums";
 
 export class LoginUserDto {
 
-    // @IsEnum(Object.values(UserRole))
-    role: string;
+    @IsEnum(UserRole)
+    role: UserRole;
 
     @IsString()
     @IsNotEmpty()

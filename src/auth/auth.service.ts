@@ -5,7 +5,7 @@ import { Guardian, GuardianDocument } from 'src/users/schemas/discriminators/gua
 import { Student, StudentDocument } from 'src/users/schemas/discriminators/student.schema';
 import { Teacher, TeacherDocument } from 'src/users/schemas/discriminators/teacher.schema';
 import { User } from 'src/users/schemas/user.schema';
-import { UserRole } from 'src/enums';
+import { UserRole } from 'src/lib/enums';
 import { CreateStudentDto } from './dtos/create-student';
 import { CreateGuardianDto } from './dtos/create-guardian.dto';
 import { CreateTeacherDto } from './dtos/create-teacher.dto';

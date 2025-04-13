@@ -1,7 +1,7 @@
-import { CreateGuardianDto } from "./auth/dtos/create-guardian.dto";
-import { CreateStudentDto } from "./auth/dtos/create-student";
-import { CreateTeacherDto } from "./auth/dtos/create-teacher.dto";
-import { LoginStudentDto, LoginGuardianDto, LoginTeacherDto } from "./auth/dtos/login-user.dto";
+import { CreateGuardianDto } from "../auth/dtos/create-guardian.dto";
+import { CreateStudentDto } from "../auth/dtos/create-student";
+import { CreateTeacherDto } from "../auth/dtos/create-teacher.dto";
+import { LoginStudentDto, LoginGuardianDto, LoginTeacherDto } from "../auth/dtos/login-user.dto";
 import { UserRole } from "./enums";
 
 

@@ -1,4 +1,4 @@
-import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
+import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform, UnprocessableEntityException } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
@@ -8,8 +8,8 @@ export class RoleValidationPipe implements PipeTransform {
     constructor(private readonly roleToDtoMap: Record<string, any>) { }
 
     async transform(value: any, metadata: ArgumentMetadata) {
-        if (!value.role) {
-            throw new Error('Role is required');
+        if (!value?.role) {
+            throw new UnprocessableEntityException('Role is required');
         }
 
         const dtoClass = this.roleToDtoMap[value.role];
