@@ -1,7 +1,7 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserRole } from "../../lib/enums";
 
-export class LoginUserDto {
+class LoginUserDto {
 
     @IsEnum(UserRole)
     role: UserRole;

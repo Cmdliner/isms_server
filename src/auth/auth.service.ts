@@ -9,7 +9,7 @@ import { UserRole } from '../lib/enums';
 import { CreateStudentDto } from './dtos/create-student';
 import { CreateGuardianDto } from './dtos/create-guardian.dto';
 import { CreateTeacherDto } from './dtos/create-teacher.dto';
-import { LoginStudentDto, LoginTeacherDto, LoginGuardianDto, LoginUserDto } from './dtos/login-user.dto';
+import { LoginStudentDto, LoginTeacherDto, LoginGuardianDto } from './dtos/login-user.dto';
 import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -61,8 +61,8 @@ export class AuthService {
     }
 
     async refresh(refresh_token: string) {
-        const payload = await this.jwtService.verifyAsync(refresh_token, { secret: this.configService.get<string>('REFRESH_SECREt') });
-        if(!payload) throw new UnauthorizedException('Unauthorized!');
+        const payload = await this.jwtService.verifyAsync(refresh_token, { secret: this.configService.get<string>('REFRESH_SECRET') });
+        if (!payload) throw new UnauthorizedException('Unauthorized!');
 
         const access_token = await this.generateAuthToken(payload, '2h');
 
