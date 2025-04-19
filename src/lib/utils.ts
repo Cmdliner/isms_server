@@ -17,3 +17,8 @@ export const roleToCreateDtoMap = {
     [UserRole.TEACHER]: CreateTeacherDto
 }
 
+export const roleToUserModelMap = {
+    [UserRole.STUDENT]: "studentModel",
+    [UserRole.GUARDIAN]: "guardianModel",
+    [UserRole.TEACHER]: "teacherModel"
+}

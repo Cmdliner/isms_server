@@ -5,9 +5,6 @@ import { Types } from "mongoose";
 
 export class CreateStudentDto extends CreateUserDto {
 
-    @Matches(/STU-\d{9}/)
-    admission_no: string;
-
     @IsDateString()
     date_of_birth: Date;
 

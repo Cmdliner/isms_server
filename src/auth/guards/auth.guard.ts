@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
         if (!token) throw new UnauthorizedException('Authentication failed!');
 
         try {
-            const payload = this.jwtService.verifyAsync(token, { secret: this.configService.get<string>('JWT_SECRET') });
+            const payload = this.jwtService.verifyAsync(token, { secret: this.configService.get<string>('ACCESS_SECRET') });
             request.user = payload;
         } catch (error) {
             throw new ForbiddenException('Authentication failed!')

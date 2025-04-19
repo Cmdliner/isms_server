@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, ForbiddenException } from '@nestjs/common';
+import { BadRequestException, Injectable, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Guardian } from '../users/schemas/discriminators/guardian.schema';
@@ -25,6 +25,9 @@ export class AuthService {
         private configService: ConfigService
     ) { }
 
+    static ADMISSION_NO_SERIAL_CACHE = 100_000_000;
+    static STAFF_ID_SERIAL_CACHE = 10_000;
+
     async createUser(createUserDto: CreateStudentDto | CreateTeacherDto | CreateGuardianDto) {
 
         const { password } = createUserDto;
@@ -33,19 +36,47 @@ export class AuthService {
 
         switch (createUserDto.role) {
             case UserRole.STUDENT:
-                return await this.createStudent(createUserDto as CreateStudentDto);
+                return this.createStudent(createUserDto as CreateStudentDto);
             case UserRole.GUARDIAN:
-                return await this.createGuardian(createUserDto as CreateGuardianDto);
+                return this.createGuardian(createUserDto as CreateGuardianDto);
             case UserRole.TEACHER:
-                return await this.createTeacher(createUserDto as CreateTeacherDto);
+                return this.createTeacher(createUserDto as CreateTeacherDto);
             default:
                 throw new BadRequestException('Unknown role. Could not create user');
         }
     }
 
+    async login(loginUserDto: LoginStudentDto | LoginTeacherDto | LoginGuardianDto) {
+        switch (loginUserDto.role) {
+            case UserRole.STUDENT:
+                return this.loginStudent(loginUserDto as LoginStudentDto);
+            case UserRole.GUARDIAN:
+                return this.loginGuardian(loginUserDto as LoginGuardianDto);
+            case UserRole.TEACHER:
+                return this.loginTeacher(loginUserDto as LoginTeacherDto);
+            default:
+                throw new BadRequestException('Unknown role. Could not sign in');
+
+        }
+    }
+
+    async refresh(refresh_token: string) {
+        const payload = await this.jwtService.verifyAsync(refresh_token, { secret: this.configService.get<string>('REFRESH_SECREt') });
+        if(!payload) throw new UnauthorizedException('Unauthorized!');
+
+        const access_token = await this.generateAuthToken(payload, '2h');
+
+        return { access_token };
+    }
+
+    async logout() { }
+
+
     private async createStudent(createStudentData: CreateStudentDto) {
         try {
-            const student = await this.studentModel.create(createStudentData);
+            // ! todo => generate a serial admission no get last admission no from a cache like, redis
+            const admission_no = `STU-${AuthService.ADMISSION_NO_SERIAL_CACHE += 1}`;
+            const student = await this.studentModel.create({ admission_no, ...createStudentData });
             return student;
         } catch (error) {
             await this.handleUniqueError(error);
@@ -63,41 +94,12 @@ export class AuthService {
 
     private async createTeacher(createTeacherData: CreateTeacherDto) {
         try {
-            const teacher = await this.teacherModel.create(createTeacherData);
+            const staff_id = `TEA-${new Date().getFullYear()}${AuthService.STAFF_ID_SERIAL_CACHE += 1}`;
+            const teacher = await this.teacherModel.create({ ...createTeacherData, staff_id });
             return teacher;
         } catch (error) {
             await this.handleUniqueError(error);
         }
-    }
-
-    private async handleUniqueError(error: any): Promise<void> {
-        if (error.code === 11000) {
-            const field = Object.keys(error.keyValue)[0];
-            const value = error.keyValue[field];
-            throw new BadRequestException(`The ${field} '${value}' is already taken.`);
-        }
-        throw new BadRequestException(error.message);
-    }
-
-    async login(loginUserDto: LoginStudentDto | LoginTeacherDto | LoginGuardianDto) {
-        switch (loginUserDto.role) {
-            case UserRole.STUDENT:
-                return this.loginStudent(loginUserDto as LoginStudentDto);
-            case UserRole.GUARDIAN:
-                return this.loginGuardian(loginUserDto as LoginGuardianDto);
-            case UserRole.TEACHER:
-                return this.loginTeacher(loginUserDto as LoginTeacherDto);
-            default:
-                throw new BadRequestException('Unknown role. Could not sign in');
-
-        }
-    }
-
-    private async generateJwtToken(payload: any, expiresIn: string): Promise<string> {
-        return this.jwtService.signAsync(payload, {
-            secret: this.configService.get('JWT_SECRET'),
-            expiresIn,
-        });
     }
 
     private async loginStudent(loginStudentData: LoginStudentDto) {
@@ -110,7 +112,11 @@ export class AuthService {
         if (!passwordsMatch) throw new ForbiddenException('Invalid admission number or password');
 
         const payload = { sub: student.id, role: student.role };
-        return { access_token: await this.generateJwtToken(payload, '7d') };
+        const access_token = await this.generateAuthToken(payload, '2h');
+        const refresh_token = await this.generateAuthToken(payload, '30d', 'refresh');
+
+        await Promise.all([access_token, refresh_token]);
+        return { access_token, refresh_token };
     }
 
     private async loginTeacher(loginTeacherData: LoginTeacherDto) {
@@ -123,7 +129,10 @@ export class AuthService {
         if (!passwordsMatch) throw new ForbiddenException('Invalid staff id or password');
 
         const payload = { sub: teacher._id, role: teacher.role };
-        return { access_token: await this.generateJwtToken(payload, '1d') };
+        const access_token = await this.generateAuthToken(payload, '2h');
+        const refresh_token = await this.generateAuthToken(payload, '30d', 'refresh');
+
+        return { access_token, refresh_token };
     }
 
     private async loginGuardian(loginGuardianData: LoginGuardianDto) {
@@ -136,6 +145,25 @@ export class AuthService {
         if (!passwordsMatch) throw new ForbiddenException('Invalid email or password');
 
         const payload = { sub: guardian._id, role: guardian.role };
-        return { access_token: await this.generateJwtToken(payload, '2h') };
+        const access_token = await this.generateAuthToken(payload, '2h');
+        const refresh_token = await this.generateAuthToken(payload, '30d', 'refresh');
+
+        return { access_token, refresh_token };
+    }
+
+    private async handleUniqueError(error: any): Promise<void> {
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyValue)[0];
+            const value = error.keyValue[field];
+            throw new BadRequestException(`The ${field} '${value}' is already taken.`);
+        }
+        throw new BadRequestException(error.message);
+    }
+
+    private async generateAuthToken(payload: any, expiresIn: string, token_type: "access" | "refresh" = "access"): Promise<string> {
+        return this.jwtService.signAsync(payload, {
+            secret: this.configService.getOrThrow<string>(token_type === "refresh" ? 'REFRESH_SECRET' : 'ACCESS_SECRET'),
+            expiresIn,
+        });
     }
 }

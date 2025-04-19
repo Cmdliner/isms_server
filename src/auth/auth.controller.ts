@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Inject, Post, Version } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Inject, Post, Res, Version } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RoleValidationPipe } from './pipes/role-validation.pipe';
 import { roleToCreateDtoMap, roleToLoginDtoMap } from '../lib/utils';
@@ -6,6 +6,9 @@ import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from './dtos/login
 import { CreateStudentDto } from './dtos/create-student';
 import { CreateGuardianDto } from './dtos/create-guardian.dto';
 import { CreateTeacherDto } from './dtos/create-teacher.dto';
+import { Cookies } from '../decorators/cookies.decorator';
+import { Response } from 'express';
+import { THIRTY_DAYS_IN_MS } from 'src/lib/constants';
 
 
 @Controller({ version: '1', path: 'auth' })
@@ -23,8 +26,28 @@ export class AuthController {
 
     @Post('login')
     @HttpCode(HttpStatus.OK)
-    async login(@Body(new RoleValidationPipe(roleToLoginDtoMap)) loginUserDto: LoginStudentDto | LoginTeacherDto | LoginGuardianDto) {
-        const result = await this.authService.login(loginUserDto);
-        return { success: true, tokens: result };
+    async login(@Body(new RoleValidationPipe(roleToLoginDtoMap)) loginUserDto: LoginStudentDto | LoginTeacherDto | LoginGuardianDto, @Res({ passthrough: true }) res: Response,) {
+        const { access_token, refresh_token } = await this.authService.login(loginUserDto);
+        res.cookie('refresh', refresh_token, { maxAge: THIRTY_DAYS_IN_MS, httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+        return { success: true, access_token };
     }
+
+    @Post('refresh')
+    @HttpCode(HttpStatus.OK)
+    async refresh(@Cookies('refresh') refresh_cookie: string) {
+        const { access_token } = await this.authService.refresh(refresh_cookie);
+        // Return  403 with reason & delete cookie if it has expired or being tempered with
+
+        // Create a new access_token && return it
+        return { success: true, access_token };
+
+    }
+
+    @Post('logout')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async logout(@Res() res: Response) {
+        // ! todo => Blacklist that access_token by storing it in some kind of black-listed cache
+        res.clearCookie('refresh');
+    }
+
 }

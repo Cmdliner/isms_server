@@ -7,9 +7,6 @@
         @IsBoolean()
         is_active: boolean;
 
-        @Matches(/TEA-\d{9}/)
-        staff_id: string;
-
         @IsArray()
         @ArrayUnique()
         @IsOptional()

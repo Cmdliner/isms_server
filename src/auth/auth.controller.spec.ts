@@ -5,7 +5,8 @@ import { AuthService } from './auth.service';
 // Create a mock of the AuthService
 const mockAuthService = {
   // Add mock methods that your controller uses
-  login: jest.fn().mockResolvedValue({ access_token: 'test-token' }),
+  login: jest.fn().mockResolvedValue({ success: true, tokens: { access_token: 'test-token' } }),
+  register: jest.fn().mockResolvedValue({ success: true, user: { _id: 'dkkgmrkglkrelt' } })
   // Add other methods as needed
 };
 

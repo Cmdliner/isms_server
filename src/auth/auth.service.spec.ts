@@ -25,7 +25,7 @@ const mockJwtService = {
 
 const mockConfigService = {
   get: jest.fn((key: string) => {
-    if (key === 'JWT_SECRET') return 'test-secret';
+    if (key === 'ACCESS_SECRET') return 'test-secret';
     return null;
   }),
 };
@@ -52,4 +52,10 @@ describe('AuthService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('login', () => {
+    it('should return with success key', () => {
+      expect(service.login)
+    })
+  })
 });
