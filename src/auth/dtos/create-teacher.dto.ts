@@ -26,7 +26,4 @@
         @IsBoolean()
         is_hod: boolean;
 
-        @IsMongoId()
-        @IsOptional()
-        home_room?: string;
     }

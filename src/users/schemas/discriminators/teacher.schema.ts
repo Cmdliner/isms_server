@@ -22,9 +22,6 @@ export class Teacher extends User {
     @Prop({ required: true })
     employed_at: Date;
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Classroom' })
-    home_room?: Types.ObjectId;
-
     @Prop()
     bio?: string;
 

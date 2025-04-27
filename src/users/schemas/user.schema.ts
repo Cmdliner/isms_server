@@ -22,7 +22,7 @@ export class User {
     @Prop({ required: true })
     last_name: string;
 
-    @Prop({ required: true })
+    @Prop({ default: new Date() })
     last_login: Date;
 
     @Prop({ required: true, enum: ['M', 'F'] })

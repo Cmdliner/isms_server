@@ -18,9 +18,6 @@ export class CreateUserDto {
     @IsAlpha()
     last_name: string;
 
-    @IsDateString()
-    last_login: Date;
-
     @IsEnum(['M', 'F'])
     gender: string;
 

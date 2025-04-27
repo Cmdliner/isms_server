@@ -61,8 +61,9 @@ export class AuthService {
     }
 
     async refresh(refresh_token: string) {
-        const payload = await this.jwtService.verifyAsync(refresh_token, { secret: this.configService.get<string>('REFRESH_SECRET') });
-        if (!payload) throw new UnauthorizedException('Unauthorized!');
+        const { sub, role } = await this.jwtService.verifyAsync(refresh_token, { secret: this.configService.get<string>('REFRESH_SECRET') });
+        const payload = { sub, role };
+        if (!payload.sub) throw new UnauthorizedException('Unauthorized!');
 
         const access_token = await this.generateAuthToken(payload, '2h');
 

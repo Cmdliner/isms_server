@@ -8,7 +8,7 @@ export type GuardianDocument = Guardian & Document;
 @Schema()
 export class Guardian extends User {
 
-    @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Student' }] })
+    @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Student', default: [] }] })
     wards: Types.ObjectId[];
 
     @Prop({ required: true })

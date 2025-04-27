@@ -17,17 +17,16 @@ export class AuthGuard implements CanActivate {
         if (!token) throw new UnauthorizedException('Authentication failed!');
 
         try {
-            const payload = this.jwtService.verifyAsync(token, { secret: this.configService.get<string>('ACCESS_SECRET') });
+            const payload = await this.jwtService.verifyAsync(token, { secret: this.configService.get<string>('ACCESS_SECRET') });
             request.user = payload;
         } catch (error) {
-            throw new ForbiddenException('Authentication failed!')
+            throw new ForbiddenException('Authentication failed!');
         }
-
         return true;
     }
 
     private extractTokenFromHeader(request: Request): string | undefined {
-        const [authType, token] = request.headers.authorization?.split(" ") as string[];
+        const [authType, token] = request.headers.authorization?.split(" ") as string[] ?? [];
 
         return authType === "Bearer" ? token : undefined;
     }

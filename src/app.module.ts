@@ -10,6 +10,9 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ResultsModule } from './results/results.module';
+// import { ClassroomModule } from './classroom/classroom.module';
+// import { AttendanceModule } from './attendance/attendance.module';
 
 @Module({
     imports: [
@@ -17,11 +20,14 @@ import { ThrottlerModule } from '@nestjs/throttler';
         MongooseModule.forRoot(process.env.MONGO_URI as string),
         ThrottlerModule.forRoot({ throttlers: [{ ttl: 60_000, limit: 10 }] }),
         StudentsModule,
-        TeachersModule,
-        GuardiansModule,
-        AdminModule,
+        // TeachersModule,
+        // GuardiansModule,
+        // AdminModule,
         AuthModule,
-        UsersModule
+        UsersModule,
+        // ResultsModule,
+        // ClassroomModule,
+        // AttendanceModule
     ],
     controllers: [AppController],
     providers: [AppService],

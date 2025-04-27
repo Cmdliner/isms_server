@@ -5,6 +5,8 @@ import { User, UserSchema } from './schemas/user.schema';
 import { Student, StudentSchema } from './schemas/discriminators/student.schema';
 import { Teacher, TeacherSchema } from './schemas/discriminators/teacher.schema';
 import { Guardian, GuardianSchema } from './schemas/discriminators/guardian.schema';
+import { UsersController } from './users.controller';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
     imports: [
@@ -18,9 +20,11 @@ import { Guardian, GuardianSchema } from './schemas/discriminators/guardian.sche
                     { name: Guardian.name, schema: GuardianSchema }
                 ]
             }
-        ])
+        ]),
+        JwtModule
     ],
     providers: [UsersService],
-    exports: [MongooseModule]
+    exports: [MongooseModule],
+    controllers: [UsersController]
 })
 export class UsersModule { }
