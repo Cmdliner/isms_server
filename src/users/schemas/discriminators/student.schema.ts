@@ -11,8 +11,8 @@ export class Student extends User {
     @Prop({ required: true, index: true, unique: true, trim: true, uppercase: true })
     admission_no: string;
 
-    // @Prop({ required: true, index: true, type: Types.ObjectId, ref: 'Classroom' })
-    // current_class: Types.ObjectId;
+    @Prop({ index: true, type: Types.ObjectId, ref: 'Classroom' })
+    current_class?: Types.ObjectId;
 
     @Prop({ index: true, type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Guardian' }], default: [] })
     guardians: Types.ObjectId[];
@@ -23,7 +23,7 @@ export class Student extends User {
     //! hint => Suggest moving to its own model and ref here
     @Prop({
         type: {
-            blood_group: { type: String, enum:  Object.values(BloodGroup) },
+            blood_group: { type: String, enum: Object.values(BloodGroup) },
             allergies: { type: [String], default: [] }
         }
     })

@@ -10,7 +10,7 @@ export class AppController {
     home() {}
 
     @Get('healthz')
-    getServerStatus(): string {
+    getServerStatus() {
         return this.appService.getServerStatus();
     }
 }

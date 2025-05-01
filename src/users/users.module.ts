@@ -7,6 +7,12 @@ import { Teacher, TeacherSchema } from './schemas/discriminators/teacher.schema'
 import { Guardian, GuardianSchema } from './schemas/discriminators/guardian.schema';
 import { UsersController } from './users.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { StudentsService } from './services/students.service';
+import { StudentsController } from './controllers/students.controller';
+import { GuardiansController } from './controllers/guardians.controller';
+import { TeachersController } from './controllers/teachers.controller';
+import { GuardiansService } from './services/guardians.service';
+import { TeachersService } from './services/teachers.service';
 
 @Module({
     imports: [
@@ -23,8 +29,18 @@ import { JwtModule } from '@nestjs/jwt';
         ]),
         JwtModule
     ],
-    providers: [UsersService],
+    providers: [
+        UsersService,
+        StudentsService,
+        GuardiansService,
+        TeachersService
+    ],
+    controllers: [
+        UsersController,
+        StudentsController,
+        GuardiansController,
+        TeachersController
+    ],
     exports: [MongooseModule],
-    controllers: [UsersController]
 })
 export class UsersModule { }

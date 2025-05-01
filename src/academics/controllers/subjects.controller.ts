@@ -1,0 +1,36 @@
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
+import { SubjectsService } from "../services/subjects.service";
+import { CreateSubjectDto } from "../dtos/subject.dto";
+import { Types } from "mongoose";
+import { ObjectIdPipe } from "../../pipes/mongo-objectid.pipe";
+import { AuthGuard } from "../../auth/guards/auth.guard";
+
+@UseGuards(AuthGuard)
+@Controller({ version: '1', path: 'subjects' })
+export class SubjectController {
+    constructor(private subjectsService: SubjectsService) { }
+
+    @Post()
+    async create(@Body() createSubjectDto: CreateSubjectDto) {
+        const subject = await this.subjectsService.create(createSubjectDto);
+        return { success: true, subject };
+    }
+
+    @Get(':id')
+    async info(@Param('id', ObjectIdPipe) subject_id: Types.ObjectId) {
+        return this.subjectsService.getDetails(subject_id);
+    }
+
+    @Post('allocate/:id')
+    async allocateTeacher(
+        @Param('id', ObjectIdPipe) subject_id: Types.ObjectId,
+        @Body('teacher_id', ObjectIdPipe) teacher_id: Types.ObjectId) {
+        return this.subjectsService.allocateTeacher(subject_id, teacher_id);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Delete(':id')
+    async delete(@Param('id', ObjectIdPipe) subject_id: Types.ObjectId) {
+        return this.subjectsService.remove(subject_id);
+    }
+}

@@ -1,4 +1,4 @@
-    import { ArrayUnique, IsArray, IsBoolean, IsDateString, IsMongoId, IsOptional, IsString, Matches } from "class-validator";
+    import { ArrayUnique, IsArray, IsBoolean, IsDateString, IsMongoId, IsOptional, IsString } from "class-validator";
     import { CreateUserDto } from "./create-user.dto";
     import { Types } from "mongoose";
 

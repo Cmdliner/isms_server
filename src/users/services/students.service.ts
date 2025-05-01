@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Student, StudentDocument } from '../users/schemas/discriminators/student.schema';
+import { Student, StudentDocument } from '../schemas/discriminators/student.schema';
 import { Model, Types } from 'mongoose';
-import { Guardian } from '../users/schemas/discriminators/guardian.schema';
+import { Guardian } from '../schemas/discriminators/guardian.schema';
 
 @Injectable()
 export class StudentsService {
@@ -12,7 +12,6 @@ export class StudentsService {
         @InjectModel(Guardian.name) private readonly guardianModel: Model<Guardian>
     ) { }
 
-    async create() { }
 
     async findById(id: Types.ObjectId): Promise<StudentDocument> {
         const student = await this.studentModel.findById(id).populate('guardians');

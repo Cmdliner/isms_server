@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-    getServerStatus(): string {
-        return 'The hood is up Cmdliner⚡⚡';
-    }
+    getServerStatus(): {active: string} {
+        return { active: 'The hood is up Cmdliner⚡⚡' };
+    }   
 }

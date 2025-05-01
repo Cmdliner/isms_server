@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { UserRole } from "../../lib/enums";
+import { Gender, UserRole } from "../../lib/enums";
 
 export type UserDocument = User & Document;
 
@@ -25,8 +25,8 @@ export class User {
     @Prop({ default: new Date() })
     last_login: Date;
 
-    @Prop({ required: true, enum: ['M', 'F'] })
-    gender: string;
+    @Prop({ required: true, enum: Object.values(Gender) })
+    gender: Gender;
 
     @Prop({})
     profile_image?: string;

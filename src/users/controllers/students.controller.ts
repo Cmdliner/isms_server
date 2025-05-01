@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { StudentsService } from './students.service';
+import { StudentsService } from '../services/students.service';
 import { Types } from 'mongoose';
-import { AuthGuard } from '../auth/guards/auth.guard';
-import { User } from 'src/decorators/user.decorator';
+import { AuthGuard } from '../../auth/guards/auth.guard';
+import { User } from '../../decorators/user.decorator';
 
 @UseGuards(AuthGuard)
 @Controller({ version: '1', path: 'students' })
@@ -10,7 +10,7 @@ export class StudentsController {
 
     constructor(private studentsService: StudentsService) { }
 
-    @Get('info')
+    @Get()
     async getInfo(@User() user: ReqUser) {
         const result = this.studentsService.findById(new Types.ObjectId(`${user.sub}`));
         return result;

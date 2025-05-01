@@ -14,9 +14,7 @@ export class CreateStudentDto extends CreateUserDto {
         allergies: string[];
     }
 
-    @IsEnum(StudentEnrollmentStatus, {
-        message: `enrollment_status must be one of: ${Object.values(StudentEnrollmentStatus).join(', ')}`
-    })
+    @IsEnum(StudentEnrollmentStatus, { message: `enrollment_status must be one of: ${Object.values(StudentEnrollmentStatus).join(', ')}` })
     @IsOptional()
     enrollment_status: StudentEnrollmentStatus;
 

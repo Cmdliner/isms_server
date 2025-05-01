@@ -1,5 +1,5 @@
-import { IsAlpha, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsString, IsStrongPassword } from "class-validator";
-import { UserRole } from "../../lib/enums";
+import { IsAlpha, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsString, IsStrongPassword, MinLength } from "class-validator";
+import { Gender, UserRole } from "../../lib/enums";
 
 export class CreateUserDto {
 
@@ -9,7 +9,8 @@ export class CreateUserDto {
     @IsEmail()
     email: string;
 
-    @IsStrongPassword()
+    @IsString()
+    @MinLength(6)
     password: string;
 
     @IsAlpha()
@@ -18,7 +19,7 @@ export class CreateUserDto {
     @IsAlpha()
     last_name: string;
 
-    @IsEnum(['M', 'F'])
-    gender: string;
+    @IsEnum(Gender)
+    gender: Gender;
 
 }

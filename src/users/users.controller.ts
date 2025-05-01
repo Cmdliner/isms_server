@@ -11,7 +11,6 @@ export class UsersController {
     
     @Get(':role')
     async getByRole(@Param('role') role: string) {
-        console.log({ role, UserRole: Object.values(UserRole)});
         if (!(Object.values(UserRole) as string[]).includes(role)) throw new BadRequestException('Unknown role!');
 
         const result = await this.usersService.getByRole(role);

@@ -16,10 +16,14 @@ A comprehensive school management RESTful API server written in Typescript and N
 
 ## TODOS
 - Write Tests
+- !!!! ENSURE TO DO PROPER AUTHORIZATION CHECKS ACROSS EACH ENDPOINT
 - Remember to upload profile_images and add them to the respective user models
 - Auto generate staff id (use nano_id pkg) and student admission no on create
 - Find a way to perform mongo sanitization and prevent csrf attacks in refresh when using cookies
+- Create student, date, subject compound unique index on attendance. So a student cant have 2 diff attendace records for same attendance on the same day
 
 ## BUGS
+- Matches decorator does not match academic session using regular expression
+- Ensure each subject is unique with a combo of subject code  academi_year (i.e we can  only have one with those 2 fields --- compound unique index)
 
 ## REMINDERS

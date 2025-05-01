@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Inject, Post, Res, UploadedFile, UseInterceptors, Version } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RoleValidationPipe } from './pipes/role-validation.pipe';
+import { RoleValidationPipe } from '../pipes/role-validation.pipe';
 import { roleToCreateDtoMap, roleToLoginDtoMap } from '../lib/utils';
 import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from './dtos/login-user.dto';
 import { CreateStudentDto } from './dtos/create-student';
@@ -13,10 +13,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 
 @Controller({ version: '1', path: 'auth' })
-export class AuthController {
+export class AuthController {   
 
     constructor(
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
     ) { }
 
     // @UseInterceptors(FileInterceptor('profile_image'))

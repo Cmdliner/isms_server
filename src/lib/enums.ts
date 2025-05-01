@@ -31,3 +31,14 @@ export enum StudentEnrollmentStatus {
     GRADUATED = 'graduated',
     UNKNOWN = 'unknown'
 }
+
+export enum AttendanceStatus {
+    PRESENT = 'present', 
+    ABSENT = 'absent', 
+    LATE = 'late'
+}
+
+export enum Gender {
+    M = 'M',
+    F = 'F'
+}
