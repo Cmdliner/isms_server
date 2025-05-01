@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Classroom } from "../schemas/classroom.schema";
-import { Model, Types } from "mongoose";
+import { Model, MongooseError, Types } from "mongoose";
 import { Student } from "../../users/schemas/discriminators/student.schema";
 import { Teacher } from "../../users/schemas/discriminators/teacher.schema";
 import { CreateClassroomDto, TransferStudentDto } from "../dtos/classroom.dto";
@@ -15,8 +15,12 @@ export class ClassroomService {
     ) { }
 
     async create(classroomData: CreateClassroomDto) {
-        await this.classroomModel.create(classroomData);
-        return { success: true, message: 'Classroom created' };
+        try {
+            await this.classroomModel.create(classroomData);
+            return { success: true, message: 'Classroom created' };
+        } catch (error) {
+            await this.handleUniqueError(error);
+        }
     }
 
     async assignTeacher(teacher_id: Types.ObjectId, classroom_id: Types.ObjectId) {
@@ -53,4 +57,14 @@ export class ClassroomService {
         const students = await this.studentModel.find({ current_class: classroom_id }).lean();
         return { success: true, students };
     }
+
+    private async handleUniqueError(error: any): Promise<void> {
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyValue)[0];
+            const value = error.keyValue[field];
+            throw new BadRequestException(`The ${field} '${value}' is already taken.`);
+        }
+        throw new BadRequestException(error.message);
+    }
+
 }

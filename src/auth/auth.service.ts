@@ -1,18 +1,18 @@
-import { BadRequestException, Injectable, ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
+import { compare, hash } from 'bcryptjs';
 import { Model } from 'mongoose';
+import { UserRole } from '../lib/enums';
 import { Guardian } from '../users/schemas/discriminators/guardian.schema';
 import { Student } from '../users/schemas/discriminators/student.schema';
 import { Teacher } from '../users/schemas/discriminators/teacher.schema';
 import { User } from '../users/schemas/user.schema';
-import { UserRole } from '../lib/enums';
-import { CreateStudentDto } from './dtos/create-student';
 import { CreateGuardianDto } from './dtos/create-guardian.dto';
+import { CreateStudentDto } from './dtos/create-student';
 import { CreateTeacherDto } from './dtos/create-teacher.dto';
-import { LoginStudentDto, LoginTeacherDto, LoginGuardianDto } from './dtos/login-user.dto';
-import { compare, hash } from 'bcryptjs';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from './dtos/login-user.dto';
 
 @Injectable()
 export class AuthService {

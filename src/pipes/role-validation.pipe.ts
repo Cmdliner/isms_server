@@ -1,7 +1,6 @@
 import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform, UnprocessableEntityException } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-import { error } from "console";
 
 @Injectable()
 export class RoleValidationPipe implements PipeTransform {

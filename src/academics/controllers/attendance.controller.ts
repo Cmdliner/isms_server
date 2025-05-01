@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
-import { CreateAttendanceDto, AttendanceQuery } from '../dtos/attendance.dto';
-import { ObjectIdPipe } from '../../pipes/mongo-objectid.pipe';
 import { Types } from 'mongoose';
-import { AttendanceService } from '../services/attendance.service';
 import { AuthGuard } from '../../auth/guards/auth.guard';
+import { ObjectIdPipe } from '../../pipes/mongo-objectid.pipe';
+import { AttendanceQuery, CreateAttendanceDto } from '../dtos/attendance.dto';
+import { AttendanceService } from '../services/attendance.service';
 
 @UseGuards(AuthGuard)
 @Controller({ version: '1', path: 'attendance' })

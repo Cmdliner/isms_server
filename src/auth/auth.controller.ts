@@ -1,15 +1,14 @@
-import { Body, Controller, HttpCode, HttpStatus, Inject, Post, Res, UploadedFile, UseInterceptors, Version } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { RoleValidationPipe } from '../pipes/role-validation.pipe';
-import { roleToCreateDtoMap, roleToLoginDtoMap } from '../lib/utils';
-import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from './dtos/login-user.dto';
-import { CreateStudentDto } from './dtos/create-student';
-import { CreateGuardianDto } from './dtos/create-guardian.dto';
-import { CreateTeacherDto } from './dtos/create-teacher.dto';
-import { Cookies } from '../decorators/cookies.decorator';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { Cookies } from '../decorators/cookies.decorator';
 import { THIRTY_DAYS_IN_MS } from '../lib/constants';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { roleToCreateDtoMap, roleToLoginDtoMap } from '../lib/utils';
+import { RoleValidationPipe } from '../pipes/role-validation.pipe';
+import { AuthService } from './auth.service';
+import { CreateGuardianDto } from './dtos/create-guardian.dto';
+import { CreateStudentDto } from './dtos/create-student';
+import { CreateTeacherDto } from './dtos/create-teacher.dto';
+import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from './dtos/login-user.dto';
 
 
 @Controller({ version: '1', path: 'auth' })

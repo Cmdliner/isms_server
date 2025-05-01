@@ -1,11 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { UnprocessableEntityException, ValidationPipe, VersioningType } from '@nestjs/common';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { extractValidationErrorMessages } from './lib/utils';
 
 async function bootstrap() {

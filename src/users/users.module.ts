@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from './schemas/user.schema';
+import { GuardiansController } from './controllers/guardians.controller';
+import { StudentsController } from './controllers/students.controller';
+import { TeachersController } from './controllers/teachers.controller';
+import { Guardian, GuardianSchema } from './schemas/discriminators/guardian.schema';
 import { Student, StudentSchema } from './schemas/discriminators/student.schema';
 import { Teacher, TeacherSchema } from './schemas/discriminators/teacher.schema';
-import { Guardian, GuardianSchema } from './schemas/discriminators/guardian.schema';
-import { UsersController } from './users.controller';
-import { JwtModule } from '@nestjs/jwt';
-import { StudentsService } from './services/students.service';
-import { StudentsController } from './controllers/students.controller';
-import { GuardiansController } from './controllers/guardians.controller';
-import { TeachersController } from './controllers/teachers.controller';
+import { User, UserSchema } from './schemas/user.schema';
 import { GuardiansService } from './services/guardians.service';
+import { StudentsService } from './services/students.service';
 import { TeachersService } from './services/teachers.service';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
     imports: [

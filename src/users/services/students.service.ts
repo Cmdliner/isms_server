@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Student, StudentDocument } from '../schemas/discriminators/student.schema';
 import { Model, Types } from 'mongoose';
 import { Guardian } from '../schemas/discriminators/guardian.schema';
+import { Student, StudentDocument } from '../schemas/discriminators/student.schema';
 
 @Injectable()
 export class StudentsService {

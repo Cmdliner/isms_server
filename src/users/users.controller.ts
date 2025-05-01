@@ -1,7 +1,7 @@
 import { BadRequestException, Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import { UserRole } from '../lib/enums';
 import { UsersService } from './users.service';
-import { AuthGuard } from '../auth/guards/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller({version: '1', path: 'users'})

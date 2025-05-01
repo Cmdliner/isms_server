@@ -32,4 +32,7 @@ export class Subject {
 
 }
 
-export const SubjectSchema = SchemaFactory.createForClass(Subject);
+export const SubjectSchema = SchemaFactory.createForClass(Subject).index({
+    code: 1,
+    academic_session: 1
+}, { unique: true });

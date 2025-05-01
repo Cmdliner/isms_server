@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
-import { SubjectsService } from "../services/subjects.service";
-import { CreateSubjectDto } from "../dtos/subject.dto";
 import { Types } from "mongoose";
-import { ObjectIdPipe } from "../../pipes/mongo-objectid.pipe";
 import { AuthGuard } from "../../auth/guards/auth.guard";
+import { ObjectIdPipe } from "../../pipes/mongo-objectid.pipe";
+import { CreateSubjectDto } from "../dtos/subject.dto";
+import { SubjectsService } from "../services/subjects.service";
 
 @UseGuards(AuthGuard)
 @Controller({ version: '1', path: 'subjects' })

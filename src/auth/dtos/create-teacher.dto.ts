@@ -1,6 +1,6 @@
-    import { ArrayUnique, IsArray, IsBoolean, IsDateString, IsMongoId, IsOptional, IsString } from "class-validator";
-    import { CreateUserDto } from "./create-user.dto";
-    import { Types } from "mongoose";
+    import { ArrayUnique, IsArray, IsBoolean, IsDateString, IsOptional, IsString } from "class-validator";
+import { Types } from "mongoose";
+import { CreateUserDto } from "./create-user.dto";
 
     export class CreateTeacherDto extends CreateUserDto {
 

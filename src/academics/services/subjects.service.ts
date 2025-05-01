@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Subject } from "../schemas/subject.schema";
 import { Model, Types } from "mongoose";
-import { CreateSubjectDto } from "../dtos/subject.dto";
 import { Teacher } from "../../users/schemas/discriminators/teacher.schema";
+import { CreateSubjectDto } from "../dtos/subject.dto";
+import { Subject } from "../schemas/subject.schema";
 
 @Injectable()
 export class SubjectsService {
@@ -13,7 +13,11 @@ export class SubjectsService {
     ) { }
 
     async create(createSubjectData: CreateSubjectDto) {
-        return this.subjectModel.create(createSubjectData);
+       try {
+         return await this.subjectModel.create(createSubjectData);
+       } catch (error) {
+            await this.handleUniqueError(error);
+       }
     }
 
     async getDetails(subject_id: Types.ObjectId) {
@@ -49,5 +53,12 @@ export class SubjectsService {
         return { deleted: true, id: result.id };
     }
 
-
+    private async handleUniqueError(error: any): Promise<void> {
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyValue)[0];
+            const value = error.keyValue[field];
+            throw new BadRequestException(`The ${field} '${value}' is already taken.`);
+        }
+        throw new BadRequestException(error.message);
+    }
 }

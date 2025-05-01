@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Redirect, VERSION_NEUTRAL, VersioningType } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Redirect, VERSION_NEUTRAL } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller({ version: VERSION_NEUTRAL })

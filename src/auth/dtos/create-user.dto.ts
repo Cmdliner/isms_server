@@ -1,4 +1,4 @@
-import { IsAlpha, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsString, IsStrongPassword, MinLength } from "class-validator";
+import { IsAlpha, IsEmail, IsEnum, IsString, MinLength } from "class-validator";
 import { Gender, UserRole } from "../../lib/enums";
 
 export class CreateUserDto {

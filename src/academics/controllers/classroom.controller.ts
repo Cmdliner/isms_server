@@ -1,9 +1,9 @@
 import { Body, Controller, HttpCode, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
+import { Types } from "mongoose";
+import { AuthGuard } from "../../auth/guards/auth.guard";
+import { ObjectIdPipe } from "../../pipes/mongo-objectid.pipe";
 import { CreateClassroomDto, TransferStudentDto } from "../dtos/classroom.dto";
 import { ClassroomService } from "../services/classroom.service";
-import { Types } from "mongoose";
-import { ObjectIdPipe } from "../../pipes/mongo-objectid.pipe";
-import { AuthGuard } from "../../auth/guards/auth.guard";
 
 @UseGuards(AuthGuard)
 @Controller({ version: '1', path: 'classroom' })

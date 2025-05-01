@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Schema as MongooseSchema, Document, Types } from "mongoose";
+import { Document, Schema as MongooseSchema, Types } from "mongoose";
 import { ACADEMIC_SESSION_REGEX } from "../../lib/constants";
 
 export type ClassroomDocument = Classroom & Document;
@@ -12,7 +12,7 @@ export class Classroom {
     @Prop({ required: true, match: ACADEMIC_SESSION_REGEX })
     academic_session: string;
 
-    @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Teacher' })
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Teacher' })
     class_teacher: Types.ObjectId;
 
     @Prop({ default: true })
@@ -25,4 +25,8 @@ export class Classroom {
     no_of_students: number;
 }
 
-export const ClassroomSchema = SchemaFactory.createForClass(Classroom);
+export const ClassroomSchema = SchemaFactory.createForClass(Classroom).index({
+    name: 1,
+    academic_session: 1
+}, { unique: true });
+

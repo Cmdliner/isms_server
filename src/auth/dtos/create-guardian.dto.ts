@@ -1,7 +1,7 @@
-import { ArrayUnique, IsArray, IsEnum, IsMongoId, IsNotEmpty, IsObject, IsOptional, IsString } from "class-validator";
-import { CreateUserDto } from "./create-user.dto";
-import { MaritalStatus } from "../../lib/enums";
+import { ArrayUnique, IsArray, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Types } from "mongoose";
+import { MaritalStatus } from "../../lib/enums";
+import { CreateUserDto } from "./create-user.dto";
 
 export class CreateGuardianDto extends CreateUserDto {
 

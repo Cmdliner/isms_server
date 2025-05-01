@@ -1,4 +1,4 @@
-import { ArrayUnique, IsArray, IsBoolean, IsNotEmpty, IsOptional, IsString, Matches } from "class-validator";
+import { ArrayUnique, IsArray, IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { IsValidAcademicYear } from "../../decorators/is-valid-academic-year.decorator";
 
 export class CreateSubjectDto {

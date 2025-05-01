@@ -2,7 +2,7 @@ import { ValidationError } from "@nestjs/common";
 import { CreateGuardianDto } from "../auth/dtos/create-guardian.dto";
 import { CreateStudentDto } from "../auth/dtos/create-student";
 import { CreateTeacherDto } from "../auth/dtos/create-teacher.dto";
-import { LoginStudentDto, LoginGuardianDto, LoginTeacherDto } from "../auth/dtos/login-user.dto";
+import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from "../auth/dtos/login-user.dto";
 import { UserRole } from "./enums";
 
 
