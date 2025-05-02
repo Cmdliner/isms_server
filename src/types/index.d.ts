@@ -11,3 +11,7 @@ type ErrorResponse = {
     timestamp: string;
     reason?: string;
 }
+
+type BulkUploadResult = { success: number, failed: number, errors: any[] }
+
+type SubjectGrade = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';

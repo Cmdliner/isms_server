@@ -23,8 +23,16 @@ export class Grade {
     @Prop({ min: 0 })
     examination_score: number;
 
+    @Prop({ virtual: true })
+    get total_score(): number {
+        return this.continuous_assessment + this.examination_score;
+    }
+
     @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Classroom' })
     classroom: Types.ObjectId;
+
+    @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Teacher' })
+    uploaded_by: Types.ObjectId;
 
     @Prop({})
     deleted_at: Date;
@@ -32,3 +40,6 @@ export class Grade {
 }
 
 export const GradeSchema = SchemaFactory.createForClass(Grade);
+
+GradeSchema.set('toJSON', { virtuals: true });
+GradeSchema.set('toObject', { virtuals: true })

@@ -13,9 +13,13 @@ A comprehensive school management RESTful API server written in Typescript and N
 
 ## IMPLEMENTED FEATURES
 - Authentication for all current user roles (`student`, `teacher`, `guardian`) using jwt
+- CRUD operations for Subject implemented
+- Attendance marking feature implemented
+- Classroom creation, assingment to teachers and students implemented
+
 
 ## TODOS
-- Write Tests
+- Add Roles guard across endpoints
 - !!!! ENSURE TO DO PROPER AUTHORIZATION CHECKS ACROSS EACH ENDPOINT
 - Remember to upload profile_images and add them to the respective user models
 - Find a way to perform mongo sanitization and prevent csrf attacks in refresh when using cookies

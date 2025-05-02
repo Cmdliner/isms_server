@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 import { AuthGuard } from "../../auth/guards/auth.guard";
 import { ObjectIdPipe } from "../../pipes/mongo-objectid.pipe";
 import { CreateSubjectDto } from "../dtos/subject.dto";
-import { SubjectsService } from "../services/subjects.service";
+import { SubjectsService } from "../services/subject.service";
 
 @UseGuards(AuthGuard)
 @Controller({ version: '1', path: 'subjects' })

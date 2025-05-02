@@ -2,6 +2,7 @@ import { IsEnum, IsMongoId, IsOptional } from "class-validator";
 import { Types } from "mongoose";
 import { IsValidAcademicYear } from "../../decorators/is-valid-academic-year.decorator";
 import { AttendanceStatus } from "../../lib/enums";
+import { TransformToObjectId } from "../../lib/utils";
 
 export class CreateAttendanceDto {
 
@@ -22,9 +23,11 @@ export class CreateAttendanceDto {
 export class AttendanceQuery {
 
     @IsMongoId()
+    @TransformToObjectId()
     subject: Types.ObjectId;
 
     @IsMongoId()
+    @TransformToObjectId()
     student: Types.ObjectId;
 
     @IsValidAcademicYear()
