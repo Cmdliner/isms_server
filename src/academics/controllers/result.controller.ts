@@ -13,7 +13,7 @@ export class ResultController {
     constructor(private readonly resultService: ResultService) { }
 
     @Get('student/:studentId')
-    @Roles([UserRole.STUDENT, UserRole.GUARDIAN, UserRole.TEACHER, UserRole.ADMIN])
+    @Roles(UserRole.STUDENT, UserRole.GUARDIAN, UserRole.TEACHER, UserRole.ADMIN)
     async getStudentResult(
         @Param('studentId') studentId: string,
         @Query('session') session: string,
@@ -27,7 +27,7 @@ export class ResultController {
     }
 
     @Get('class/:classroomId')
-    @Roles([UserRole.TEACHER, UserRole.ADMIN])
+    @Roles(UserRole.TEACHER, UserRole.ADMIN)
     async getClassResults(
         @Param('classroomId') classroomId: string,
         @Query('session') session: string,
@@ -42,7 +42,7 @@ export class ResultController {
     }
 
     @Post('class/:classroomId/promotion')
-    @Roles([UserRole.ADMIN])
+    @Roles(UserRole.ADMIN)
     async calculatePromotionStatus(
         @Param('classroomId') classroomId: string,
         @Query('session') session: string
@@ -55,7 +55,7 @@ export class ResultController {
     }
 
     @Put(':resultId/comments')
-    @Roles([UserRole.TEACHER, UserRole.ADMIN])
+    @Roles(UserRole.TEACHER, UserRole.ADMIN)
     async updateTermComments(
         @Param('resultId') resultId: string,
         @Query('term') term: string,

@@ -15,20 +15,20 @@ export class SubjectController {
     constructor(private subjectsService: SubjectsService) { }
 
     @Post()
-    @Roles([UserRole.ADMIN])
+    @Roles(UserRole.ADMIN)
     async create(@Body() createSubjectDto: CreateSubjectDto) {
         const subject = await this.subjectsService.create(createSubjectDto);
         return { success: true, subject };
     }
 
     @Get(':id')
-    @Roles([UserRole.STUDENT, UserRole.GUARDIAN, UserRole.TEACHER, UserRole.ADMIN])
+    @Roles(UserRole.STUDENT, UserRole.GUARDIAN, UserRole.TEACHER, UserRole.ADMIN)
     async info(@Param('id', ObjectIdPipe) subject_id: Types.ObjectId) {
         return this.subjectsService.getDetails(subject_id);
     }
 
     @Post('allocate/:id')
-    @Roles([UserRole.ADMIN])
+    @Roles(UserRole.ADMIN)
     async allocateTeacher(
         @Param('id', ObjectIdPipe) subject_id: Types.ObjectId,
         @Body('teacher_id', ObjectIdPipe) teacher_id: Types.ObjectId) {
@@ -36,7 +36,7 @@ export class SubjectController {
     }
 
     @HttpCode(HttpStatus.OK)
-    @Roles([UserRole.ADMIN])
+    @Roles(UserRole.ADMIN)
     @Delete(':id')
     async delete(@Param('id', ObjectIdPipe) subject_id: Types.ObjectId) {
         return this.subjectsService.remove(subject_id);

@@ -15,7 +15,7 @@ export class ClassroomController {
     constructor(private classroomService: ClassroomService) { }
 
     @Post()
-    @Roles([UserRole.ADMIN])
+    @Roles(UserRole.ADMIN)
     async create(@Body() classroomData: CreateClassroomDto) {
         return this.classroomService.create(classroomData);
     }
@@ -25,28 +25,28 @@ export class ClassroomController {
 
     @HttpCode(HttpStatus.OK)
     @Post('teacher/:classroomID/:teacherID')
-    @Roles([UserRole.ADMIN])
+    @Roles(UserRole.ADMIN)
     async assignTeacher(@Param('classroomID', ObjectIdPipe) classroom_id: Types.ObjectId, @Param('teacherID', ObjectIdPipe) teacher_id: Types.ObjectId) {
         return this.classroomService.assignTeacher(teacher_id, classroom_id);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('student/:classroomID/:studentID')
-    @Roles([UserRole.TEACHER, UserRole.ADMIN])
+    @Roles(UserRole.TEACHER, UserRole.ADMIN)
     async assignStudent(@Param('classroomID', ObjectIdPipe) classroom_id: Types.ObjectId, @Param('studentID', ObjectIdPipe) student_id: Types.ObjectId) {
         return this.classroomService.assignStudent(student_id, classroom_id)
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('student/transfer')
-    @Roles([UserRole.TEACHER, UserRole.ADMIN])
+    @Roles(UserRole.TEACHER, UserRole.ADMIN)
     async transferStudent(@Body() transfer_data: TransferStudentDto) {
         return this.classroomService.transferStudent(transfer_data);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post(':id')
-    @Roles([UserRole.TEACHER, UserRole.ADMIN])
+    @Roles(UserRole.TEACHER, UserRole.ADMIN)
     async getAllStudents(@Param('id') classroom_id: Types.ObjectId) {
         return this.classroomService.findAll(classroom_id);
     }

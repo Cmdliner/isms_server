@@ -17,7 +17,7 @@ export class AttendanceController {
     ) { }
 
     @Post(':subjectID/bulk-upload')
-    @Roles([UserRole.ADMIN, UserRole.TEACHER])
+    @Roles(UserRole.ADMIN, UserRole.TEACHER)
     async bulkUpload(
         @Param('subjectID', ObjectIdPipe) subject_id: Types.ObjectId,
         @Body() attendance_list: CreateAttendanceDto[]) {
@@ -25,7 +25,7 @@ export class AttendanceController {
     }
 
     @Get()
-    @Roles([UserRole.ADMIN, UserRole.TEACHER])
+    @Roles(UserRole.ADMIN, UserRole.TEACHER)
     async getAttendanceForSubject(@Query() attendance_query: AttendanceQuery) {
         return this.attendanceService.find(attendance_query);
     }
