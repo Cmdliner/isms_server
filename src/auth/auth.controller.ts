@@ -1,4 +1,5 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { Cookies } from '../decorators/cookies.decorator';
 import { THIRTY_DAYS_IN_MS } from '../lib/constants';
@@ -12,17 +13,18 @@ import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from './dtos/login
 
 
 @Controller({ version: '1', path: 'auth' })
-export class AuthController {   
+export class AuthController {
 
     constructor(
         private readonly authService: AuthService,
     ) { }
 
-    // @UseInterceptors(FileInterceptor('profile_image'))
     @Post('register')
+    @UseInterceptors(FileInterceptor('profile_image'))
     async register(
-        @Body(new RoleValidationPipe(roleToCreateDtoMap)) createUserDto: CreateStudentDto | CreateGuardianDto | CreateTeacherDto,
-        /*  @UploadedFile() profile_image: Express.Multer.File */) {
+        @Body(
+            new RoleValidationPipe(roleToCreateDtoMap)) createUserDto: CreateStudentDto | CreateGuardianDto | CreateTeacherDto,
+        @UploadedFile() profile_image: Express.Multer.File) {
         const result = await this.authService.createUser(createUserDto);
         return { success: true, user: result };
     }

@@ -34,7 +34,7 @@ export class GradeUploadDataDto {
     continuous_assessment: number;
 }
 
-export class GradeUpdateDataDto extends GradeUploadDataDto {}
+export class GradeUpdateDataDto extends GradeUploadDataDto { }
 
 export class ResultsQuery {
     @IsMongoId()
@@ -49,4 +49,20 @@ export class ResultsQuery {
     @IsString()
     @IsOptional()
     term: string;
+}
+
+export class ClassStatsQuery {
+
+    @IsMongoId()
+    @TransformToObjectId()
+    classroom: string;
+
+    @IsString()
+    subject: string;
+
+    @IsString()
+    term: string;
+    
+    @IsValidAcademicYear()
+    session: string;
 }

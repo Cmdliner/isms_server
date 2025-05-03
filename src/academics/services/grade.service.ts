@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { Student } from "../../users/schemas/discriminators/student.schema";
-import { GradeUploadDataDto, ResultsQuery } from "../dtos/grade.dto";
+import { ClassStatsQuery, GradeUploadDataDto, ResultsQuery } from "../dtos/grade.dto";
 import { Grade } from "../schemas/grade.schema";
 
 @Injectable()
@@ -32,7 +32,7 @@ export class GradeService {
         }, { uploaded_by, examination_score, continuous_assessment }, { upsert: true, new: true });
     }
 
-    async deleteGrade(id: string) {
+    async deleteGrade(id: Types.ObjectId) {
         const grade = await this.gradeModel.findById(id);
         if (!grade || grade.deleted_at) throw new NotFoundException('Grade not found');
 
@@ -74,7 +74,8 @@ export class GradeService {
             .exec()
     }
 
-    async getGradesStatistics(classroom: Types.ObjectId, subject: Types.ObjectId, term: string, session: string) {
+    async getGradesStatistics(query: ClassStatsQuery) {
+        const { classroom, subject, term, session } = query;
         const grades = await this.gradeModel.find({
             classroom,
             subject,
@@ -98,7 +99,7 @@ export class GradeService {
         const results = {
             success: 0,
             failed: 0,
-            errors: ['o']
+            errors: []
         };
 
         for (const gradeData of gradesData) {
@@ -106,8 +107,8 @@ export class GradeService {
                 await this.uploadGrade(gradeData);
                 results.success++;
             } catch (error) {
-                if(results)
-                results.failed++;
+                if (results)
+                    results.failed++;
                 // results.errors.push({
                 //     data: gradeData,
                 //     error: error.message
@@ -123,9 +124,7 @@ export class GradeService {
         let { term, ...query } = resultQuery;
         if (term) query = resultQuery;
 
-        const result = await this.gradeModel.find({ query }).populate(["student", "subject", "classroom"]).lean();
-        return { success: true, result }
-
+        return this.gradeModel.find({ query }).populate(["student", "subject", "classroom"]).lean();
     }
 
 }

@@ -51,3 +51,8 @@ export const TransformToObjectId = () => {
 }
 
 export const compareObjectId = (a: Types.ObjectId, b: Types.ObjectId) => a.toString() === b.toString();
+
+
+export async function parseCSV<T>(csv_file: string): Promise<T[]> {
+    return [];
+}

@@ -1,15 +1,19 @@
 import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { Types } from "mongoose";
 import { AuthGuard } from "../../auth/guards/auth.guard";
+import { Roles } from "../../decorators/roles.decorator";
+import { RolesGuard } from "../../guards/roles.guard";
+import { UserRole } from "../../lib/enums";
 import { ResultService } from "../services/result.service";
 
 @Controller({ version: '1', path: 'results' })
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class ResultController {
+
     constructor(private readonly resultService: ResultService) { }
 
     @Get('student/:studentId')
-    // @Roles('student', 'parent', 'teacher', 'admin')
+    @Roles([UserRole.STUDENT, UserRole.GUARDIAN, UserRole.TEACHER, UserRole.ADMIN])
     async getStudentResult(
         @Param('studentId') studentId: string,
         @Query('session') session: string,
@@ -23,7 +27,7 @@ export class ResultController {
     }
 
     @Get('class/:classroomId')
-    // @Roles('teacher', 'admin')
+    @Roles([UserRole.TEACHER, UserRole.ADMIN])
     async getClassResults(
         @Param('classroomId') classroomId: string,
         @Query('session') session: string,
@@ -38,7 +42,7 @@ export class ResultController {
     }
 
     @Post('class/:classroomId/promotion')
-    // @Roles('admin')
+    @Roles([UserRole.ADMIN])
     async calculatePromotionStatus(
         @Param('classroomId') classroomId: string,
         @Query('session') session: string
@@ -51,7 +55,7 @@ export class ResultController {
     }
 
     @Put(':resultId/comments')
-    // @Roles('teacher', 'admin')
+    @Roles([UserRole.TEACHER, UserRole.ADMIN])
     async updateTermComments(
         @Param('resultId') resultId: string,
         @Query('term') term: string,
