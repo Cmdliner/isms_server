@@ -1,9 +1,11 @@
-import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { BadRequestException, ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { compare, hash } from 'bcryptjs';
 import { Model } from 'mongoose';
+import { generateAdmissionNo, generateStaffID } from '../lib/utils';
 import { UserRole } from '../lib/enums';
 import { Guardian } from '../users/schemas/discriminators/guardian.schema';
 import { Student } from '../users/schemas/discriminators/student.schema';
@@ -17,6 +19,7 @@ import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from './dtos/login
 @Injectable()
 export class AuthService {
     constructor(
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
         @InjectModel(User.name) private userModel: Model<User>,
         @InjectModel(Student.name) private studentModel: Model<Student>,
         @InjectModel(Guardian.name) private guardianModel: Model<Guardian>,
@@ -25,8 +28,6 @@ export class AuthService {
         private configService: ConfigService
     ) { }
 
-    static ADMISSION_NO_SERIAL_CACHE = 100_000_000;
-    static STAFF_ID_SERIAL_CACHE = 10_000;
 
     async createUser(createUserDto: CreateStudentDto | CreateTeacherDto | CreateGuardianDto) {
 
@@ -75,9 +76,10 @@ export class AuthService {
 
     private async createStudent(createStudentData: CreateStudentDto) {
         try {
-            // ! todo => generate a serial admission no get last admission no from a cache like, redis
-            const admission_no = `STU-${AuthService.ADMISSION_NO_SERIAL_CACHE += 1}`;
+            const admission_no_sequence: number = await this.cacheManager.get('ISMS_ADMISSION_NO_CACHE') ?? 1;
+            const admission_no = generateAdmissionNo(`${admission_no_sequence}`);
             const student = await this.studentModel.create({ admission_no, ...createStudentData });
+            await this.cacheManager.set('ISMS_ADMISSION_NO_CACHE', admission_no_sequence + 1);
             return student;
         } catch (error) {
             await this.handleUniqueError(error);
@@ -95,8 +97,11 @@ export class AuthService {
 
     private async createTeacher(createTeacherData: CreateTeacherDto) {
         try {
-            const staff_id = `TEA-${new Date().getFullYear()}${AuthService.STAFF_ID_SERIAL_CACHE += 1}`;
+            const staff_id_sequence: number = await this.cacheManager.get('ISMS_STAFF_ID_CACHE') ?? 1;
+            const staff_id = generateStaffID(`${staff_id_sequence}`);
             const teacher = await this.teacherModel.create({ ...createTeacherData, staff_id });
+            await this.cacheManager.set('ISMS_STAFF_ID_CACHE', staff_id_sequence + 1);
+
             return teacher;
         } catch (error) {
             await this.handleUniqueError(error);

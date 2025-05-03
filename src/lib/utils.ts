@@ -56,3 +56,17 @@ export const compareObjectId = (a: Types.ObjectId, b: Types.ObjectId) => a.toStr
 export async function parseCSV<T>(csv_file: string): Promise<T[]> {
     return [];
 }
+
+export function generateAdmissionNo (serial_value: string): string {
+    const timestamp = Date.now().toString()
+    const randValue = timestamp.slice(timestamp.length - 6);
+
+    return `STU-${randValue}${serial_value.padStart(3, '0')}`;
+}
+
+export function generateStaffID(serial_value: string) {
+    const timestamp = Date.now().toString()
+    const randValue = timestamp.slice(timestamp.length - 6);
+    
+    return `TEA-${randValue}${serial_value.padStart(3, '0')}`;
+}
