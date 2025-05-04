@@ -1,5 +1,7 @@
 import { ValidationError } from "@nestjs/common";
 import { Transform } from "class-transformer";
+import csv from "csv-parser";
+import { createReadStream } from "fs";
 import { Types } from "mongoose";
 import { CreateGuardianDto } from "../auth/dtos/create-guardian.dto";
 import { CreateStudentDto } from "../auth/dtos/create-student";
@@ -54,10 +56,15 @@ export const compareObjectId = (a: Types.ObjectId, b: Types.ObjectId) => a.toStr
 
 
 export async function parseCSV<T>(csv_file: string): Promise<T[]> {
-    return [];
+    const results: T[] = [];
+    createReadStream(csv_file)
+        .pipe(csv())
+        .on('data', data => results.push(data))
+        .on('end', () => console.log(results))
+    return results;
 }
 
-export function generateAdmissionNo (serial_value: string): string {
+export function generateAdmissionNo(serial_value: string): string {
     const timestamp = Date.now().toString()
     const randValue = timestamp.slice(timestamp.length - 6);
 
@@ -67,6 +74,6 @@ export function generateAdmissionNo (serial_value: string): string {
 export function generateStaffID(serial_value: string) {
     const timestamp = Date.now().toString()
     const randValue = timestamp.slice(timestamp.length - 6);
-    
+
     return `TEA-${randValue}${serial_value.padStart(3, '0')}`;
 }

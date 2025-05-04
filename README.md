@@ -21,6 +21,7 @@ A comprehensive school management RESTful API server written in Typescript and N
 
 ## TODOS
 - Add cloudinary, configure, and upload profile_mages
+- Implement Parse CSV function in  `lib/utils`
 - Find a way to perform mongo sanitization and prevent csrf attacks in refresh when using cookies
 
 
