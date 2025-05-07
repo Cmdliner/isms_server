@@ -8,6 +8,7 @@ import { CreateStudentDto } from "../auth/dtos/create-student";
 import { CreateTeacherDto } from "../auth/dtos/create-teacher.dto";
 import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from "../auth/dtos/login-user.dto";
 import { UserRole } from "./enums";
+import { Readable } from "stream";
 
 
 export const roleToLoginDtoMap = {
@@ -54,14 +55,24 @@ export const TransformToObjectId = () => {
 
 export const compareObjectId = (a: Types.ObjectId, b: Types.ObjectId) => a.toString() === b.toString();
 
-
 export async function parseCSV<T>(csv_file: string): Promise<T[]> {
     const results: T[] = [];
-    createReadStream(csv_file)
-        .pipe(csv())
-        .on('data', data => results.push(data))
-        .on('end', () => console.log(results))
-    return results;
+    return new Promise((resolve, reject) => {
+        try {
+            const parser = csv();
+
+            const bufferStream = new Readable();
+            bufferStream.push(csv_file);
+            bufferStream.push(null);
+
+            bufferStream.pipe(parser)
+            .on('data', data => results.push(data as T))
+            .on('end', () => resolve(results))
+            .on('error', err => reject(err));
+        } catch (error) {
+            reject(error);
+        }
+    })
 }
 
 export function generateAdmissionNo(serial_value: string): string {

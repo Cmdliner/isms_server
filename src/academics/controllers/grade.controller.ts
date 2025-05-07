@@ -1,8 +1,8 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Types } from "mongoose";
-import { AuthGuard } from "../../auth/guards/auth.guard";
 import { Roles } from "../../decorators/roles.decorator";
+import { AuthGuard } from "../../guards/auth.guard";
 import { RolesGuard } from "../../guards/roles.guard";
 import { UserRole } from "../../lib/enums";
 import { parseCSV } from "../../lib/utils";

@@ -22,7 +22,6 @@ export class AuthGuard implements CanActivate {
         } catch (error) {
             const errorResponse = { message: 'Authentication failed!', reason: 'INVALID_JWT' };
             if(error instanceof TokenExpiredError) errorResponse.reason = 'JWT_EXPIRED';
-            console.error({ error })
             throw new ForbiddenException(errorResponse);
         }
         return true;

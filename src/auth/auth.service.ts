@@ -5,12 +5,12 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { compare, hash } from 'bcryptjs';
 import { Model } from 'mongoose';
-import { generateAdmissionNo, generateStaffID } from '../lib/utils';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { UserRole } from '../lib/enums';
+import { generateAdmissionNo, generateStaffID } from '../lib/utils';
 import { Guardian } from '../users/schemas/discriminators/guardian.schema';
 import { Student } from '../users/schemas/discriminators/student.schema';
 import { Teacher } from '../users/schemas/discriminators/teacher.schema';
-import { User } from '../users/schemas/user.schema';
 import { CreateGuardianDto } from './dtos/create-guardian.dto';
 import { CreateStudentDto } from './dtos/create-student';
 import { CreateTeacherDto } from './dtos/create-teacher.dto';
@@ -20,16 +20,16 @@ import { LoginGuardianDto, LoginStudentDto, LoginTeacherDto } from './dtos/login
 export class AuthService {
     constructor(
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
-        @InjectModel(User.name) private userModel: Model<User>,
         @InjectModel(Student.name) private studentModel: Model<Student>,
         @InjectModel(Guardian.name) private guardianModel: Model<Guardian>,
         @InjectModel(Teacher.name) private teacherModel: Model<Teacher>,
         private jwtService: JwtService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private readonly cloudinaryService: CloudinaryService
     ) { }
 
 
-    async createUser(createUserDto: CreateStudentDto | CreateTeacherDto | CreateGuardianDto) {
+    async createUser(createUserDto: CreateStudentDto | CreateTeacherDto | CreateGuardianDto, profile_img?: Express.Multer.File) {
 
         const { password } = createUserDto;
         const hashedPassword = await hash(password, 10);
@@ -37,11 +37,11 @@ export class AuthService {
 
         switch (createUserDto.role) {
             case UserRole.STUDENT:
-                return this.createStudent(createUserDto as CreateStudentDto);
+                return this.createStudent(createUserDto as CreateStudentDto, profile_img);
             case UserRole.GUARDIAN:
-                return this.createGuardian(createUserDto as CreateGuardianDto);
+                return this.createGuardian(createUserDto as CreateGuardianDto, profile_img);
             case UserRole.TEACHER:
-                return this.createTeacher(createUserDto as CreateTeacherDto);
+                return this.createTeacher(createUserDto as CreateTeacherDto, profile_img);
             default:
                 throw new BadRequestException('Unknown role. Could not create user');
         }
@@ -74,11 +74,15 @@ export class AuthService {
     async logout() { }
 
 
-    private async createStudent(createStudentData: CreateStudentDto) {
+    private async createStudent(createStudentData: CreateStudentDto, profile_img?: Express.Multer.File) {
         try {
             const admission_no_sequence: number = await this.cacheManager.get('ISMS_ADMISSION_NO_CACHE') ?? 1;
             const admission_no = generateAdmissionNo(`${admission_no_sequence}`);
-            const student = await this.studentModel.create({ admission_no, ...createStudentData });
+
+            const profile_upload_result = profile_img && await this.uploadProfileImage(profile_img) as any;
+            const profile_image = { public_id: profile_upload_result.public_id, secure_url: profile_upload_result.secure_url }
+
+            const student = await this.studentModel.create({ admission_no, profile_image, ...createStudentData });
             await this.cacheManager.set('ISMS_ADMISSION_NO_CACHE', admission_no_sequence + 1);
             return student;
         } catch (error) {
@@ -86,20 +90,27 @@ export class AuthService {
         }
     }
 
-    private async createGuardian(createGuardianData: CreateGuardianDto) {
+    private async createGuardian(createGuardianData: CreateGuardianDto, profile_img?: Express.Multer.File) {
         try {
-            const guardian = await this.guardianModel.create(createGuardianData);
+            const profile_upload_result = profile_img && await this.uploadProfileImage(profile_img) as any;
+            const profile_image = { public_id: profile_upload_result.public_id, secure_url: profile_upload_result.secure_url }
+
+            const guardian = await this.guardianModel.create({ profile_image, ...createGuardianData });
             return guardian;
         } catch (error) {
             await this.handleUniqueError(error);
         }
     }
 
-    private async createTeacher(createTeacherData: CreateTeacherDto) {
+    private async createTeacher(createTeacherData: CreateTeacherDto, profile_img?: Express.Multer.File) {
         try {
-            const staff_id_sequence: number = await this.cacheManager.get('ISMS_STAFF_ID_CACHE') ?? 1;
+            const staff_id_sequence = await this.cacheManager.get<number>('ISMS_STAFF_ID_CACHE') ?? 1;
             const staff_id = generateStaffID(`${staff_id_sequence}`);
-            const teacher = await this.teacherModel.create({ ...createTeacherData, staff_id });
+
+            const profile_upload_result = profile_img && await this.uploadProfileImage(profile_img) as any;
+            const profile_image = { public_id: profile_upload_result.public_id, secure_url: profile_upload_result.secure_url }
+
+            const teacher = await this.teacherModel.create({ staff_id, profile_image, ...createTeacherData });
             await this.cacheManager.set('ISMS_STAFF_ID_CACHE', staff_id_sequence + 1);
 
             return teacher;
@@ -166,10 +177,23 @@ export class AuthService {
         throw new BadRequestException(error.message);
     }
 
-    private async generateAuthToken(payload: any, expiresIn: string, token_type: "access" | "refresh" = "access"): Promise<string> {
+    private async generateAuthToken(payload: any, expiresIn: string, token_type: TokenType = "access"): Promise<string> {
         return this.jwtService.signAsync(payload, {
             secret: this.configService.getOrThrow<string>(token_type === "refresh" ? 'REFRESH_SECRET' : 'ACCESS_SECRET'),
             expiresIn,
         });
+    }
+
+    private async uploadProfileImage(file: Express.Multer.File) {
+        return this.cloudinaryService.uploadFile(file, {
+            folder: 'images',
+            transformation: {
+                width: 1_000,
+                height: 1_000,
+                format: 'webp',
+                fetch_format: 'webp',
+                crop: 'limit'
+            }
+        })
     }
 }

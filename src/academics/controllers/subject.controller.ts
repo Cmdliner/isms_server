@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
 import { Types } from "mongoose";
-import { AuthGuard } from "../../auth/guards/auth.guard";
 import { Roles } from "../../decorators/roles.decorator";
+import { AuthGuard } from "../../guards/auth.guard";
 import { RolesGuard } from "../../guards/roles.guard";
 import { UserRole } from "../../lib/enums";
 import { ObjectIdPipe } from "../../pipes/mongo-objectid.pipe";

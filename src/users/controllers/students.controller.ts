@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { AuthGuard } from '../../auth/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { User } from '../../decorators/user.decorator';
 import { StudentsService } from '../services/students.service';
 

@@ -16,3 +16,4 @@ type BulkUploadResult = { success: number, failed: number, errors: any[] }
 
 type SubjectGrade = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 
+type TokenType = "access" | "refresh";

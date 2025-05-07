@@ -20,12 +20,12 @@ A comprehensive school management RESTful API server written in Typescript and N
 - RBAC implemented
 
 ## TODOS
-- Add cloudinary, configure, and upload profile_mages
+- Add cloudinary, configure, and upload profile_images
 - Implement Parse CSV function in  `lib/utils`
 - Find a way to perform mongo sanitization and prevent csrf attacks in refresh when using cookies
 
 
 ## BUGS
-
+- Bulk upload result returns never type for error key
 
 ## REMINDERS

@@ -1,14 +1,15 @@
+import { createKeyv } from '@keyv/redis';
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { AcademicsModule } from './academics/academics.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { UsersModule } from './users/users.module';
-import { CacheModule } from '@nestjs/cache-manager';
-import { AcademicsModule } from './academics/academics.module';
-import { createKeyv } from '@keyv/redis';
 
 @Module({
     imports: [
@@ -28,6 +29,7 @@ import { createKeyv } from '@keyv/redis';
         AuthModule,
         UsersModule,
         AcademicsModule,
+        CloudinaryModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { Types } from "mongoose";
-import { AuthGuard } from "../../auth/guards/auth.guard";
 import { Roles } from "../../decorators/roles.decorator";
+import { AuthGuard } from "../../guards/auth.guard";
 import { RolesGuard } from "../../guards/roles.guard";
 import { UserRole } from "../../lib/enums";
 import { ResultService } from "../services/result.service";

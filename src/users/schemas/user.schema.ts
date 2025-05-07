@@ -28,8 +28,11 @@ export class User {
     @Prop({ required: true, enum: Object.values(Gender) })
     gender: Gender;
 
-    @Prop({})
-    profile_image?: string;
+    @Prop({ type: Object })
+    profile_image?: {
+        secure_url: string;
+        public_id: string;
+    };
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
