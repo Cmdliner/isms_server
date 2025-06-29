@@ -80,7 +80,7 @@ export class AuthService {
             const admission_no = generateAdmissionNo(`${admission_no_sequence}`);
 
             const profile_upload_result = profile_img && await this.uploadProfileImage(profile_img) as any;
-            const profile_image = { public_id: profile_upload_result.public_id, secure_url: profile_upload_result.secure_url }
+            const profile_image = { public_id: profile_upload_result?.public_id, secure_url: profile_upload_result?.secure_url }
 
             const student = await this.studentModel.create({ admission_no, profile_image, ...createStudentData });
             await this.cacheManager.set('ISMS_ADMISSION_NO_CACHE', admission_no_sequence + 1);
@@ -93,7 +93,7 @@ export class AuthService {
     private async createGuardian(createGuardianData: CreateGuardianDto, profile_img?: Express.Multer.File) {
         try {
             const profile_upload_result = profile_img && await this.uploadProfileImage(profile_img) as any;
-            const profile_image = { public_id: profile_upload_result.public_id, secure_url: profile_upload_result.secure_url }
+            const profile_image = { public_id: profile_upload_result?.public_id, secure_url: profile_upload_result?.secure_url }
 
             const guardian = await this.guardianModel.create({ profile_image, ...createGuardianData });
             return guardian;
@@ -108,7 +108,7 @@ export class AuthService {
             const staff_id = generateStaffID(`${staff_id_sequence}`);
 
             const profile_upload_result = profile_img && await this.uploadProfileImage(profile_img) as any;
-            const profile_image = { public_id: profile_upload_result.public_id, secure_url: profile_upload_result.secure_url }
+            const profile_image = { public_id: profile_upload_result?.public_id, secure_url: profile_upload_result?.secure_url }
 
             const teacher = await this.teacherModel.create({ staff_id, profile_image, ...createTeacherData });
             await this.cacheManager.set('ISMS_STAFF_ID_CACHE', staff_id_sequence + 1);

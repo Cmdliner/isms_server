@@ -24,8 +24,8 @@ export class AuthController {
     async register(
         @Body(
             new RoleValidationPipe(roleToCreateDtoMap)) createUserDto: CreateStudentDto | CreateGuardianDto | CreateTeacherDto,
-        @UploadedFile() profile_image: Express.Multer.File) {
-        const result = await this.authService.createUser(createUserDto);
+        @UploadedFile() profile_image?: Express.Multer.File) {
+        const result = await this.authService.createUser(createUserDto, profile_image);
         return { success: true, user: result };
     }
 

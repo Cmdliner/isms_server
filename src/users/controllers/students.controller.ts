@@ -18,7 +18,8 @@ export class StudentsController {
 
     @Post(':id/guardians')
     async addGuardian(@Param('id') student_id: string, @Body('guardian_id') guardian_id: string) {
-        return this.studentsService.addGuardian(student_id, guardian_id);
+        await this.studentsService.addGuardian(student_id, guardian_id);
+        return { success: true, message: 'Guardian added successfully' }
     }
 
     @Post('/assign-classroom')

@@ -30,9 +30,8 @@ export class StudentsService {
         const guardian = await this.guardianModel.findById(guardian_id);
         if (!guardian) throw new NotFoundException('Guardian not found!');
 
-        await this.studentModel.findOneAndUpdate({ _id: student_id }, { $addToSet: { guardians: guardian_id } });
+        return this.studentModel.findOneAndUpdate({ _id: student_id }, { $addToSet: { guardians: guardian_id } });
 
-        return { success: true, message: 'Guardian added successfully' };
     }
 
     async assignClassroom(user_id: Types.ObjectId) {

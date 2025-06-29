@@ -1,7 +1,6 @@
 import { ValidationError } from "@nestjs/common";
 import { Transform } from "class-transformer";
 import csv from "csv-parser";
-import { createReadStream } from "fs";
 import { Types } from "mongoose";
 import { CreateGuardianDto } from "../auth/dtos/create-guardian.dto";
 import { CreateStudentDto } from "../auth/dtos/create-student";

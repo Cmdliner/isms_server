@@ -1,10 +1,10 @@
-    import { ArrayUnique, IsArray, IsBoolean, IsDateString, IsOptional, IsString } from "class-validator";
+    import { ArrayUnique, IsArray, IsBooleanString, IsDateString, IsOptional, IsString } from "class-validator";
 import { Types } from "mongoose";
 import { CreateUserDto } from "./create-user.dto";
 
     export class CreateTeacherDto extends CreateUserDto {
 
-        @IsBoolean()
+        @IsBooleanString()
         is_active: boolean;
 
         @IsArray()
@@ -23,7 +23,7 @@ import { CreateUserDto } from "./create-user.dto";
         @IsOptional()
         bio?: string;
 
-        @IsBoolean()
+        @IsBooleanString()
         is_hod: boolean;
 
     }
